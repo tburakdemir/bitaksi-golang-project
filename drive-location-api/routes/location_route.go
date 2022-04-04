@@ -7,4 +7,5 @@ import (
 
 func LocationRoute(app *fiber.App) {
      app.Post("/locations", controllers.CreateLocation)
+	 app.Get("/locations", controllers.GetLocations)
 }
