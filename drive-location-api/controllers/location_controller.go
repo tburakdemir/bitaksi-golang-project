@@ -9,6 +9,7 @@ import (
 	"github.com/tburakdemir/driver-location-api/configs"
 	"github.com/tburakdemir/driver-location-api/models"
 	"github.com/tburakdemir/driver-location-api/responses"
+	"github.com/tburakdemir/driver-location-api/utils"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -55,9 +56,14 @@ func GetLocations(c *fiber.Ctx) error {
     defer cancel()
 
 	var query models.LocationQuery
-	 if err := c.QueryParser(&query); err != nil {
+	if err := c.QueryParser(&query); err != nil {
         return c.Status(http.StatusBadRequest).JSON(responses.LocationResponse{Status: http.StatusBadRequest, Message: "error", Data: &fiber.Map{"data": err.Error()}})
     }
+
+	searchLocation, err := models.NewSearchLocation(query)
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(responses.LocationResponse{Status: http.StatusBadRequest, Message: "error", Data: &fiber.Map{"data": err.Error()}})
+	}
 
 	filter, err := models.NewFilter(query)
 	if err != nil {
@@ -75,7 +81,10 @@ func GetLocations(c *fiber.Ctx) error {
 			// handle error
 			fmt.Println(err)
 		}
+		distance := utils.Haversine(searchLocation.Coordinates[0], searchLocation.Coordinates[1], 5, 10)
 		fmt.Println(result)
+		fmt.Println(distance)
+
 	}
 	if err := cursor.Err(); err != nil {
 		fmt.Println(err)
