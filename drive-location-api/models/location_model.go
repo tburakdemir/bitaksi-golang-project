@@ -8,9 +8,13 @@ import (
 )
 
 type Location struct {
-   Id       primitive.ObjectID `json:"id,omitempty"`
    Type 	  string    `json:"type,omitempty"`
    Coordinates [2]float64 `json:"coordinates"`
+}
+
+type LocationSchema struct {
+	ID primitive.ObjectID `bson:"_id,omitempty"`
+	Location Location `bson:"location"`
 }
 
 type LocationQuery struct {
@@ -19,8 +23,15 @@ type LocationQuery struct {
 }
 
 type SearchLocation struct {
+	Id       primitive.ObjectID 
 	Coordinates [2]float64 
 	Radius 	float64  
+}
+
+type SearchResult struct {
+	ID       primitive.ObjectID `json:"_id"`
+	Location Location
+	Distance float64
 }
 
 func NewSearchLocation(query LocationQuery) (*SearchLocation, error){

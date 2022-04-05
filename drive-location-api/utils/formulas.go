@@ -2,21 +2,33 @@ package utils
 
 import "math"
 
-func Haversine(lat1, lon1, lat2, lon2 float64) float64{
-	// convert to radians
-	// must cast radius as float to multiply later
-	var la1, lo1, la2, lo2, r float64
-	la1 = lat1 * math.Pi / 180
-	lo1 = lon1 * math.Pi / 180
-	la2 = lat2 * math.Pi / 180
-	lo2 = lon2 * math.Pi / 180
+//https://github.com/umahmood/haversine/blob/master/haversine.go
 
-	// radius of earth in km
-	r = 6378.8
+const (
+	earthRadiusMi = 3958 // radius of the earth in miles.
+	earthRaidusKm = 6371 // radius of the earth in kilometers.
+)
 
-	// calculate
-	h := math.Sin(la2-la1)*math.Cos(la2+la1) + math.Cos(la1)*math.Cos(la2)*math.Sin(lo2-lo1)
 
-	return h * r
+func degreesToRadians(d float64) float64 {
+	return d * math.Pi / 180
+}
+
+func Haversine(la1, lo1, la2, lo2 float64) float64{
+
+	lat1 := degreesToRadians(la1)
+	lon1 := degreesToRadians(lo1)
+	lat2 := degreesToRadians(la2)
+	lon2 := degreesToRadians(lo2)
+
+	diffLat := lat2 - lat1
+	diffLon := lon2 - lon1
+
+	a := math.Pow(math.Sin(diffLat/2), 2) + math.Cos(lat1)*math.Cos(lat2)*
+		math.Pow(math.Sin(diffLon/2), 2)
+
+	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
+	km := c * earthRaidusKm
+	return km
 }
 

@@ -74,21 +74,41 @@ func GetLocations(c *fiber.Ctx) error {
     if err != nil {
         return c.Status(http.StatusInternalServerError).JSON(responses.LocationResponse{Status: http.StatusInternalServerError, Message: "error", Data: &fiber.Map{"data": err.Error()}})
     }
-	
+	var searchResults []models.SearchResult
 	for cursor.Next(context.TODO()) {
 		var result bson.D
 		if err := cursor.Decode(&result); err != nil {
 			// handle error
 			fmt.Println(err)
 		}
-		distance := utils.Haversine(searchLocation.Coordinates[0], searchLocation.Coordinates[1], 5, 10)
-		fmt.Println(result)
-		fmt.Println(distance)
+
+		doc, err := bson.Marshal(result)
+		if err != nil {
+			// handle error
+			fmt.Println(err)
+		}
+
+		var locationSchema models.LocationSchema
+		err = bson.Unmarshal(doc, &locationSchema)
+		if err != nil {
+			// handle error
+			fmt.Println(err)
+		}
+
+		distance := utils.Haversine(searchLocation.Coordinates[0], searchLocation.Coordinates[1], 
+				locationSchema.Location.Coordinates[0], locationSchema.Location.Coordinates[1])	
+
+		var searchResult models.SearchResult
+		searchResult.ID = locationSchema.ID
+		searchResult.Location = locationSchema.Location
+		searchResult.Distance = distance
+		searchResults = append(searchResults, searchResult) 
 
 	}
+	
 	if err := cursor.Err(); err != nil {
 		fmt.Println(err)
 	}
 
-	return c.Status(http.StatusOK).JSON(responses.LocationResponse{Status: http.StatusOK, Message: "success", Data: &fiber.Map{"data": "Hello from Fiber & mongoDB"}})
+	return c.Status(http.StatusOK).JSON(responses.LocationResponse{Status: http.StatusOK, Message: "success", Data: &fiber.Map{"data": searchResults}})
 }
