@@ -13,6 +13,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -21,6 +22,14 @@ var locationCollection *mongo.Collection = configs.GetCollection(configs.DB, "lo
 var validate = validator.New()
 
 func CreateLocation(c *fiber.Ctx) error {
+
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	name := claims["name"].(string)
+
+	fmt.Println("name: ", name)
+
+
     ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
     var location models.Location
     defer cancel()

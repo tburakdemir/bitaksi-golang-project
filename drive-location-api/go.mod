@@ -11,13 +11,15 @@ require (
 	github.com/go-playground/validator/v10 v10.10.1 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/gofiber/fiber/v2 v2.31.0 // indirect
+	github.com/gofiber/jwt/v3 v3.2.10 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/klauspost/compress v1.15.1 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.34.0 // indirect
+	github.com/valyala/fasthttp v1.35.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.1 // indirect
@@ -26,6 +28,6 @@ require (
 	go.mongodb.org/mongo-driver v1.8.4 // indirect
 	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20220403205710-6acee93ad0eb // indirect
+	golang.org/x/sys v0.0.0-20220405210540-1e041c57c461 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
